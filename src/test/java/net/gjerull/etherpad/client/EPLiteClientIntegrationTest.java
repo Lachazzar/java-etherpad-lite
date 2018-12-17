@@ -976,71 +976,617 @@ public class EPLiteClientIntegrationTest {
 
     }
 
-    /*
+    
     @Test
     public void create_pad_set_and_get_content() {
         String padID = "integration-test-pad";
+        mockServer
+        .when(
+                request()
+                        .withMethod("POST")
+                        .withHeader(getHeader("119"))
+                        .withPath("/api/1.2.13/createPad")
+                        .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                + "&padID=" + padID)
+        )
+        .respond(
+                response()
+                        .withHeader(
+                                getHeader("100")
+                        )
+                        .withBody(""
+                                + "{"
+                                + "\"code\":0,"
+                                + "\"message\":\"ok\","
+                                + "\"data\":null}"
+                        )
+        );
         client.createPad(padID);
         try {
+        	mockServer
+            .when(
+                    request()
+                            .withMethod("POST")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/setText")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID + "&text=gå å gjør et ærend")
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":null}"
+                            )
+            );
             client.setText(padID, "gå å gjør et ærend");
+            mockServer
+            .when(
+                    request()
+                            .withMethod("GET")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/getText")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":{\"text\":\"gå å gjør et ærend\\n\"}}"
+                            )
+            );
             String text = (String) client.getText(padID).get("text");
             assertEquals("gå å gjør et ærend\n", text);
+            mockServer
+            .when(
+                    request()
+                            .withMethod("POST")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/setHTML")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID + "&html=<!DOCTYPE HTML><html><body><p>gå og gjøre et ærend igjen</p></body></html>")
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":{\"text\":\"gå å gjør et ærend\\n\"}}"
+                            )
+            );
             client.setHTML(
                     padID,
                    "<!DOCTYPE HTML><html><body><p>gå og gjøre et ærend igjen</p></body></html>"
             );
+            mockServer
+            .when(
+                    request()
+                            .withMethod("GET")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/getHTML")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":{\"html\":\"<!DOCTYPE HTML><html><body>g&#229; og gj&#248;re et &#230;rend igjen<br><br></body></html>\"}}"
+                            )
+            );
             String html = (String) client.getHTML(padID).get("html");
             assertTrue(html, html.contains("g&#229; og gj&#248;re et &#230;rend igjen<br><br>"));
+            mockServer
+            .when(
+                    request()
+                            .withMethod("GET")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/getHTML")
+                            .withQueryStringParameter("&rev=2apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":{\"html\":\"<!DOCTYPE HTML><html><body><br></body></html>\"}}"
+                            )
+            );
             html = (String) client.getHTML(padID, 2).get("html");
             assertEquals("<!DOCTYPE HTML><html><body><br></body></html>", html);
+            mockServer
+            .when(
+                    request()
+                            .withMethod("GET")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/getText")
+                            .withQueryStringParameter("&rev=2apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":\"\\n\"}"
+                            )
+            );
             text = (String) client.getText(padID, 2).get("text");
             assertEquals("\n", text);
+            mockServer
+            .when(
+                    request()
+                            .withMethod("GET")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/getRevisionCount")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":{\"revisions\":3}}"
+                            )
+            );
             long revisionCount = (long) client.getRevisionsCount(padID).get("revisions");
             assertEquals(3L, revisionCount);
+            mockServer
+            .when(
+                    request()
+                            .withMethod("GET")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/getRevisionChangeset")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":\"Z:1>r|1+r$gå og gjøre et ærend igjen\\n\"}"
+                            )
+            );
             String revisionChangeset = client.getRevisionChangeset(padID);
             assertTrue(revisionChangeset, revisionChangeset.contains("gå og gjøre et ærend igjen"));
+            mockServer
+            .when(
+                    request()
+                            .withMethod("GET")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/getRevisionChangeset")
+                            .withQueryStringParameter("&rev=2apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":\"Z:j<i|1-j|1+1$\\n\"}"
+                            )
+            );
             revisionChangeset = client.getRevisionChangeset(padID, 2);
             assertTrue(revisionChangeset, revisionChangeset.contains("|1-j|1+1$\n"));
+            mockServer
+            .when(
+                    request()
+                            .withMethod("POST")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/createDiffHTML")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID + "&startRev=1&endRev=2")
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":{\"html\":\"<style>\\n.removed {text-decoration: line-through; -ms-filter:'progid:DXImageTransform.Microsoft.Alpha(Opacity=80)'; filter: alpha(opacity=80); opacity: 0.8; }\\n</style><span class=\\\"removed\\\">g&#229; &#229; gj&#248;r et &#230;rend</span><br><br>\",\"authors\":[\"\"]}}"
+                            )
+            );
             String diffHTML = (String) client.createDiffHTML(padID, 1, 2).get("html");
             assertTrue(diffHTML, diffHTML.contains(
                     "<span class=\"removed\">g&#229; &#229; gj&#248;r et &#230;rend</span>"
             ));
+            mockServer
+            .when(
+                    request()
+                            .withMethod("POST")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/appendText")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID + "&text=lagt til nå")
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":null}"
+                            )
+            );
             client.appendText(padID, "lagt til nå");
+            mockServer
+            .when(
+                    request()
+                            .withMethod("GET")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/getText")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":{\"text\":\"gå og gjøre et ærend igjen\\nlagt til nå\\n\"}}"
+                            )
+            );
             text = (String) client.getText(padID).get("text");
             assertEquals("gå og gjøre et ærend igjen\nlagt til nå\n", text);
+            mockServer
+            .when(
+                    request()
+                            .withMethod("GET")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/getAttributePool")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":{\"pool\":{\"numToAttrib\":{\"0\":[\"author\",\"\"],\"1\":[\"removed\",\"true\"]},\"attribToNum\":{\"author,\":0,\"removed,true\":1},\"nextNum\":2}}}"
+                            )
+            );
             Map attributePool = (Map) client.getAttributePool(padID).get("pool");
             assertTrue(attributePool.containsKey("attribToNum"));
             assertTrue(attributePool.containsKey("nextNum"));
             assertTrue(attributePool.containsKey("numToAttrib"));
+            mockServer
+            .when(
+                    request()
+                            .withMethod("POST")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/saveRevision")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":null}"
+                            )
+            );
             client.saveRevision(padID);
+            mockServer
+            .when(
+                    request()
+                            .withMethod("POST")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/saveRevision")
+                            .withQueryStringParameter("&rev=2apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":null}"
+                            )
+            );
             client.saveRevision(padID, 2);
+            mockServer
+            .when(
+                    request()
+                            .withMethod("GET")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/getSavedRevisionCount")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":{\"savedRevisions\":2}}"
+                            )
+            );
             long savedRevisionCount = (long) client.getSavedRevisionsCount(padID).get("savedRevisions");
             assertEquals(2L, savedRevisionCount);
+            mockServer
+            .when(
+                    request()
+                            .withMethod("GET")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/listSavedRevisions")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":{\"savedRevisions\":[2,4]}}"
+                            )
+            );
             List savedRevisions = (List) client.listSavedRevisions(padID).get("savedRevisions");
             assertEquals(2, savedRevisions.size());
             assertEquals(2L, savedRevisions.get(0));
             assertEquals(4L, savedRevisions.get(1));
+            mockServer
+            .when(
+                    request()
+                            .withMethod("GET")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/padUsersCount")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":{\"savedRevisions\":[2,4]}}"
+                            )
+            );
             long padUsersCount = (long) client.padUsersCount(padID).get("padUsersCount");
             assertEquals(0, padUsersCount);
+            mockServer
+            .when(
+                    request()
+                            .withMethod("GET")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/padUsers")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":{\"padUsers\":[]}}"
+                            )
+            );
             List padUsers = (List) client.padUsers(padID).get("padUsers");
             assertEquals(0, padUsers.size());
+            mockServer
+            .when(
+                    request()
+                            .withMethod("GET")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/getReadOnlyID")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":{\"readOnlyID\":\"r.652ecc2d4b50aff452cfacb1a6f74bae\"}}"
+                            )
+            );
             String readOnlyId = (String) client.getReadOnlyID(padID).get("readOnlyID");
+            mockServer
+            .when(
+                    request()
+                            .withMethod("GET")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/getPadID")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&roID=r.652ecc2d4b50aff452cfacb1a6f74bae")
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":{\"padID\":\"integration-test-pad\"}}"
+                            )
+            );
             String padIdFromROId = (String) client.getPadID(readOnlyId).get("padID");
             assertEquals(padID, padIdFromROId);
+            mockServer
+            .when(
+                    request()
+                            .withMethod("GET")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/listAuthorsOfPad")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":{\"authorIDs\":[]}}"
+                            )
+            );
             List authorsOfPad = (List) client.listAuthorsOfPad(padID).get("authorIDs");
             assertEquals(0, authorsOfPad.size());
+            mockServer
+            .when(
+                    request()
+                            .withMethod("GET")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/getLastEdited")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":{\"lastEdited\":1542896390755}}"
+                            )
+            );
             long lastEditedTimeStamp = (long) client.getLastEdited(padID).get("lastEdited");
             Calendar lastEdited = Calendar.getInstance();
             lastEdited.setTimeInMillis(lastEditedTimeStamp);
             Calendar now = Calendar.getInstance();
             assertTrue(lastEdited.before(now));
+            mockServer
+            .when(
+                    request()
+                            .withMethod("POST")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/sendClientsMessage")
+                            .withQueryStringParameter("apikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":{}}"
+                            )
+            );
             client.sendClientsMessage(padID, "test message");
         } finally {
+        	mockServer
+            .when(
+                    request()
+                            .withMethod("POST")
+                            .withHeader(getHeader("119"))
+                            .withPath("/api/1.2.13/deletePad")
+                            .withQueryStringParameter("msg=testmessageapikey=a04f17343b51afaa036a7428171dd873469cd85911ab43be0503d29d2acbbd58"
+                                    + "&padID=" + padID)
+            )
+            .respond(
+                    response()
+                            .withHeader(
+                                    getHeader("100")
+                            )
+                            .withBody(""
+                                    + "{"
+                                    + "\"code\":0,"
+                                    + "\"message\":\"ok\","
+                                    + "\"data\":null}"
+                            )
+            );
             client.deletePad(padID);
         }
-    }*/
+    }
 
- /*
+ 
     @Test
     public void create_pad_move_and_copy() throws Exception {
         String padID = "integration-test-pad";
@@ -1064,7 +1610,7 @@ public class EPLiteClientIntegrationTest {
         assertEquals(keep + "\n", movePadText);
         assertEquals(change + "\n", copyPadTextForce);
         assertEquals(change + "\n", movePadTextForce);
-    }*/
+    }
     @Test
     public void create_pads_and_list_them() throws InterruptedException {
         String pad1 = "integration-test-pad-1";
@@ -1212,7 +1758,6 @@ public class EPLiteClientIntegrationTest {
         assertTrue(padIDs.contains(pad2));
     }
 
-    /*
     @Test
     public void create_pad_and_chat_about_it() {
         String padID = "integration-test-pad-1";
@@ -1241,5 +1786,5 @@ public class EPLiteClientIntegrationTest {
         } finally {
             client.deletePad(padID);
         }
-    }*/
+    }
 }
